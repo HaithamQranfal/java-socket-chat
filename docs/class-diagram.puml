@@ -1,0 +1,108 @@
+@startuml class-diagram
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+title Class Diagram - Multi-Client Chat (Server and Client)
+
+package "TCPServer" {
+  class TCPServer <<launcher>> {
+    + {static} main(args: String[])
+  }
+  package "com.chat.server.view" {
+    class ServerApp {
+      - users: ObservableList<String>
+      - colors: Map<String, Color>
+      - logArea: TextArea
+      + start(stage: Stage)
+      + stop()
+    }
+  }
+  package "com.chat.server.model" {
+    interface ServerListener {
+      + onLog(message: String)
+      + onUserJoined(username: String)
+      + onUserLeft(username: String)
+    }
+    class ChatServer {
+      - port: int
+      - handlers: Set<ClientHandler>
+      - users: Map<String, ClientHandler>
+      + start()
+      + stop()
+      ~ admit(h: ClientHandler): boolean
+      ~ release(h: ClientHandler)
+      ~ chat(sender: ClientHandler, text: String)
+      ~ broadcast(line: String)
+      ~ userList(): List<String>
+    }
+    class ClientHandler <<Runnable>> {
+      - socket: Socket
+      - username: String
+      - admitted: boolean
+      + run()
+      ~ send(line: String)
+      ~ close()
+    }
+    class AppConfig {
+      + {static} load(file: String): Properties
+      + {static} getInt(p, key, def): int
+    }
+    class Protocol <<constants>>
+  }
+}
+
+package "TCPClient" {
+  class TCPClient <<launcher>> {
+    + {static} main(args: String[])
+  }
+  package "com.chat.client.view" {
+    class ClientApp {
+      - host: String
+      - port: int
+      + start(stage: Stage)
+    }
+    class ChatView {
+      - readOnly: boolean
+      - online: boolean
+      + bind(c: ChatConnection)
+      + shutdown()
+    }
+  }
+  package "com.chat.client.model" {
+    interface ChatListener {
+      + onMessage(line: String)
+      + onInfo(text: String)
+      + onUserList(users: List<String>)
+      + onError(text: String)
+      + onDisconnected()
+    }
+    class ChatConnection {
+      - host: String
+      - port: int
+      - username: String
+      + connect()
+      + send(text: String): boolean
+      + disconnect()
+      + isReadOnly(): boolean
+    }
+    class "AppConfig" as CAppConfig
+    class "Protocol" as CProtocol <<constants>>
+  }
+}
+
+TCPServer ..> ServerApp : launches
+ServerApp ..|> ServerListener : anonymous impl
+ServerApp --> ChatServer : creates / observes
+ServerApp ..> AppConfig
+ChatServer --> ServerListener : notifies
+ChatServer "1" o-- "*" ClientHandler
+ClientHandler --> ChatServer : admit / chat / release
+ClientHandler ..> Protocol
+
+TCPClient ..> ClientApp : launches
+ClientApp --> ChatView : creates
+ClientApp ..> CAppConfig
+ChatView ..|> ChatListener
+ChatView --> ChatConnection : calls send / disconnect
+ChatConnection --> ChatListener : notifies
+ChatConnection ..> CProtocol
+@enduml

@@ -1,0 +1,42 @@
+@startuml sequence-diagram
+title Sequence - connect, chat, allUsers, leave
+actor Alice
+participant "ChatView\n(Alice)" as AV
+participant "ChatConnection\n(Alice)" as AC
+participant "ClientHandler\n(Alice)" as H
+participant ChatServer as S
+participant "ClientHandler\n(Bob)" as HB
+
+Alice -> AV : enters username, JOIN
+AV -> AC : connect()
+AC -> H : HELLO alice
+H -> S : admit(handler)
+S --> H : ok / unique
+S -> HB : INFO alice joined the chat
+H --> AC : INFO Welcome alice!
+AC --> AV : onInfo(...) (Platform.runLater)
+
+Alice -> AV : types "hello", Enter
+AV -> AC : send("hello")
+AC -> H : MSG hello
+H -> S : chat(alice, "hello")
+S -> S : format "[HH:mm] alice: hello"
+S -> H : MSG [HH:mm] alice: hello
+S -> HB : MSG [HH:mm] alice: hello
+H --> AC : MSG ...
+AC --> AV : onMessage(...)
+
+Alice -> AV : types "allUsers"
+AV -> AC : send("allUsers")
+AC -> H : ALLUSERS
+H --> AC : USERS alice,bob  (requester only)
+AC --> AV : onUserList([alice, bob])
+
+Alice -> AV : types "bye" / clicks LEAVE
+AV -> AC : disconnect()
+AC -> H : BYE
+AC -> AC : close socket
+H -> S : release(handler)
+S -> HB : INFO alice left the chat
+AC --> AV : onDisconnected() -> Offline
+@enduml

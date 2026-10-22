@@ -1,0 +1,37 @@
+@startuml deployment-diagram
+title Deployment Diagram - TCP/IP Group Chat
+skinparam nodeStyle rectangle
+
+node "Server Host" <<machine>> {
+  node "JVM 21" <<execution environment>> as SJVM {
+    artifact "TCPServer.jar" as SJAR
+    artifact "config.properties\n(server.port=3000)" as SCFG
+    component "ChatServer\n(accept loop)" as ACC
+    component "ClientHandler\n(1 virtual thread per client)" as CH
+  }
+}
+
+node "Client Machine A" <<machine>> {
+  node "JVM 21 " <<execution environment>> as CJVM1 {
+    artifact "TCPClient.jar" as CJAR1
+    artifact "config.properties\n(host, port)" as CCFG1
+  }
+}
+
+node "Client Machine B" <<machine>> {
+  node "JVM 21  " <<execution environment>> as CJVM2 {
+    artifact "TCPClient.jar" as CJAR2
+    artifact "config.properties\n(host, port)" as CCFG2
+  }
+}
+
+node "Client Machine C\n(read-only guest)" <<machine>> {
+  node "JVM 21   " <<execution environment>> as CJVM3 {
+    artifact "TCPClient.jar" as CJAR3
+  }
+}
+
+CJVM1 -- SJVM : TCP/IP socket\nport 3000
+CJVM2 -- SJVM : TCP/IP socket\nport 3000
+CJVM3 -- SJVM : TCP/IP socket\nport 3000
+@enduml

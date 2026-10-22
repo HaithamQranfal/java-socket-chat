@@ -1,0 +1,27 @@
+@startuml usecase-diagram
+left to right direction
+title Use Cases
+actor "Chat User" as U
+actor "Guest (read-only)" as G
+actor "Server Operator" as O
+rectangle "Chat System" {
+  usecase "Join with username" as UC1
+  usecase "Send message" as UC2
+  usecase "List active users (allUsers)" as UC3
+  usecase "Leave (end / bye / LEAVE)" as UC4
+  usecase "Read messages" as UC5
+  usecase "Monitor connected users" as UC6
+  usecase "View activity log" as UC7
+}
+U --> UC1
+U --> UC2
+U --> UC3
+U --> UC4
+U --> UC5
+G --> UC5
+G --> UC3
+G --> UC4
+O --> UC6
+O --> UC7
+UC1 .> UC2 : <<enables>>
+@enduml
