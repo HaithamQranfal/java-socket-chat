@@ -1,0 +1,13 @@
+.login-root, .chat-root { -fx-background-color: #f4f6f8; -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
+.title    { -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d; }
+.subtitle { -fx-font-size: 12px; -fx-text-fill: #5b6b7b; }
+.badge-readonly { -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: #e67e22; -fx-background-radius: 10; -fx-padding: 2 8; }
+.status-label { -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #34495e; }
+.error-label  { -fx-text-fill: #c0392b; }
+.chat-area    { -fx-font-size: 13.5px; }
+.text-field, .text-area { -fx-background-radius: 6; -fx-border-radius: 6; }
+.send-button  { -fx-background-color: #2d7ff9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 18; -fx-cursor: hand; }
+.send-button:hover    { -fx-background-color: #1c6be0; }
+.send-button:disabled { -fx-background-color: #b7c4d4; }
+.leave-button { -fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; }
+.leave-button:hover { -fx-background-color: #c0392b; }
