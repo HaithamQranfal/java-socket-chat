@@ -1,0 +1,7 @@
+.server-root { -fx-background-color: #f4f6f8; -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
+.title   { -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d; }
+.subtitle{ -fx-font-size: 12px; -fx-text-fill: #5b6b7b; }
+.section { -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #5b6b7b; }
+.list-view { -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #d5dbe1; }
+.list-cell { -fx-padding: 8 12; -fx-font-size: 14px; }
+.text-area { -fx-font-family: "Consolas", "Monospaced"; -fx-font-size: 12.5px; }
